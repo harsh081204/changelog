@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Installation {
+    id String @id @default(cuid())
+    githubInstallId Int @unique
+    accountLogin String
+    createdAt DateTime @default(now())
+    repos Repo[]
+}
+
+model Repo {
+    id String @id @default(cuid())
+    installationId String
+    installation Installation @relation(fields: [installationId], references: [id])
+    owner String
+    name String
+    entries ChangelogEntry[]
+    @@unique([owner, name])
+}
+
+model ChangelogEntry {
+    id String @id @default(cuid())
+    repoId String
+    repo Repo @relation(fields: [repoId], references: [id])
+    version String?
+    title String 
+    rawDiff String @db.Text
+    aiDraft String @db.Text
+    published String? @db.Text
+    status EntryStatus @default(DRAFT)
+    prNumber Int?
+    commitSha String?
+    createdAt DateTime @default(now())
+    publishedAt DateTime?
+    changes Change[]
+}
+
+model Change {
+    id String @id @default(cuid())
+    entryId String
+    entry ChangelogEntry @relation(fields: [entryId], references: [id])
+    type ChangeType
+    summary String
+    files String[]
+}
+
+enum EntryStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  }
+enum ChangeType {
+  FEATURE
+  BUGFIX
+  BREAKING
+  INTERNAL
+  }

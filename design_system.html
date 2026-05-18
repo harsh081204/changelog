@@ -1,0 +1,305 @@
+
+<style>
+  :root {
+    --ds-navy: #355872;
+    --ds-mid: #7AAACE;
+    --ds-light: #9CD5FF;
+    --ds-white: #F7F8F0;
+    --ds-ink: #1C2E3A;
+    --ds-muted: #5A7A8E;
+    --ds-accent: #E8A24B;
+    --ds-surface: #EDF4F9;
+    --ds-border: rgba(53,88,114,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--ds-white); color: var(--ds-ink); }
+
+  .section { padding: 2rem 2rem 0; }
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ds-muted); margin-bottom: 1rem; }
+
+  /* COLOR SWATCHES */
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .swatch { border-radius: 10px; overflow: hidden; flex: 1; min-width: 90px; }
+  .swatch-color { height: 72px; }
+  .swatch-info { padding: 8px 10px; background: white; border: 0.5px solid var(--ds-border); border-top: none; border-radius: 0 0 10px 10px; }
+  .swatch-name { font-size: 11px; font-weight: 600; color: var(--ds-ink); }
+  .swatch-hex { font-size: 10px; color: var(--ds-muted); font-family: monospace; }
+  .swatch-role { font-size: 10px; color: var(--ds-muted); margin-top: 2px; }
+
+  /* SCORE */
+  .score-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .bar-track { flex: 1; height: 6px; background: var(--ds-surface); border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; background: var(--ds-navy); }
+  .bar-label { font-size: 12px; color: var(--ds-muted); min-width: 130px; }
+  .bar-score { font-size: 12px; font-weight: 600; color: var(--ds-navy); min-width: 36px; text-align: right; }
+  .score-summary { background: var(--ds-navy); color: var(--ds-white); border-radius: 12px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+  .score-big { font-size: 36px; font-weight: 700; color: #9CD5FF; }
+  .score-text { font-size: 13px; line-height: 1.5; opacity: 0.85; }
+
+  /* TYPE SCALE */
+  .type-row { padding: 12px 0; border-bottom: 0.5px solid var(--ds-border); display: flex; align-items: baseline; gap: 16px; }
+  .type-row:last-child { border-bottom: none; }
+  .type-meta { font-size: 10px; font-family: monospace; color: var(--ds-muted); min-width: 120px; }
+  .t-display { font-size: 32px; font-weight: 700; color: var(--ds-ink); letter-spacing: -0.02em; line-height: 1.1; }
+  .t-h1 { font-size: 24px; font-weight: 600; color: var(--ds-ink); letter-spacing: -0.01em; }
+  .t-h2 { font-size: 18px; font-weight: 600; color: var(--ds-ink); }
+  .t-h3 { font-size: 15px; font-weight: 600; color: var(--ds-navy); }
+  .t-body { font-size: 15px; color: var(--ds-muted); line-height: 1.6; }
+  .t-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ds-muted); }
+  .t-mono { font-size: 13px; font-family: monospace; color: var(--ds-navy); background: var(--ds-surface); padding: 2px 6px; border-radius: 4px; }
+
+  /* COMPONENTS */
+  .components-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Buttons */
+  .btn-demo { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 1rem 1.25rem; background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; }
+  .btn-primary { background: var(--ds-navy); color: var(--ds-white); }
+  .btn-secondary { background: transparent; color: var(--ds-navy); border: 1.5px solid var(--ds-navy); }
+  .btn-ghost { background: var(--ds-surface); color: var(--ds-navy); }
+  .btn-accent { background: var(--ds-accent); color: white; }
+
+  /* Tag/Badge */
+  .badge-demo { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 1rem 1.25rem; background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+  .badge-tech { background: var(--ds-surface); color: var(--ds-navy); }
+  .badge-open { background: #E5F5E9; color: #2E7D32; }
+  .badge-new { background: rgba(156,213,255,0.3); color: var(--ds-navy); }
+  .badge-featured { background: var(--ds-navy); color: var(--ds-light); }
+
+  /* Nav */
+  .nav-demo { padding: 0 1.25rem; background: var(--ds-navy); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+  .nav-logo { font-size: 14px; font-weight: 700; color: var(--ds-white); letter-spacing: 0.02em; }
+  .nav-links { display: flex; gap: 20px; }
+  .nav-link { font-size: 12px; color: rgba(247,248,240,0.65); text-decoration: none; }
+  .nav-link.active { color: var(--ds-light); font-weight: 600; }
+  .nav-cta { background: var(--ds-light); color: var(--ds-navy); font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 6px; }
+
+  /* Project card */
+  .proj-card { background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; overflow: hidden; }
+  .proj-thumb { height: 90px; background: linear-gradient(135deg, var(--ds-navy) 0%, var(--ds-mid) 100%); display: flex; align-items: center; justify-content: center; }
+  .proj-thumb-icon { font-size: 28px; opacity: 0.6; }
+  .proj-body { padding: 12px; }
+  .proj-title { font-size: 13px; font-weight: 600; color: var(--ds-ink); margin-bottom: 4px; }
+  .proj-desc { font-size: 11px; color: var(--ds-muted); line-height: 1.5; margin-bottom: 8px; }
+  .proj-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  /* Skill bar */
+  .skill-card { background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1rem 1.25rem; }
+  .skill-row { margin-bottom: 10px; }
+  .skill-row:last-child { margin-bottom: 0; }
+  .skill-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .skill-name { font-size: 12px; font-weight: 500; color: var(--ds-ink); }
+  .skill-pct { font-size: 11px; color: var(--ds-muted); }
+  .skill-track { height: 5px; background: var(--ds-surface); border-radius: 99px; overflow: hidden; }
+  .skill-fill { height: 100%; border-radius: 99px; background: var(--ds-mid); }
+  .skill-fill.strong { background: var(--ds-navy); }
+
+  /* Timeline */
+  .timeline-card { background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1rem 1.25rem; }
+  .timeline-item { display: flex; gap: 12px; margin-bottom: 14px; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .tl-dot-wrap { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ds-navy); flex-shrink: 0; margin-top: 3px; }
+  .tl-line { width: 1px; flex: 1; background: var(--ds-border); margin-top: 4px; }
+  .tl-role { font-size: 12px; font-weight: 600; color: var(--ds-ink); }
+  .tl-company { font-size: 11px; color: var(--ds-navy); font-weight: 500; }
+  .tl-date { font-size: 10px; color: var(--ds-muted); margin-top: 1px; }
+
+  /* Stat card */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-card { background: var(--ds-navy); border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-val { font-size: 22px; font-weight: 700; color: var(--ds-light); }
+  .stat-label { font-size: 10px; color: rgba(247,248,240,0.6); margin-top: 2px; }
+
+  /* Avatar / hero */
+  .hero-card { background: var(--ds-surface); border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1.25rem; display: flex; align-items: center; gap: 14px; }
+  .avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--ds-navy); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--ds-light); flex-shrink: 0; }
+  .hero-name { font-size: 15px; font-weight: 700; color: var(--ds-ink); }
+  .hero-role { font-size: 12px; color: var(--ds-navy); font-weight: 500; }
+  .hero-bio { font-size: 11px; color: var(--ds-muted); margin-top: 4px; line-height: 1.5; }
+
+  /* Spacing */
+  .divider { height: 0.5px; background: var(--ds-border); margin: 2rem; }
+  .pb { padding-bottom: 2rem; }
+
+  .full-col { grid-column: 1 / -1; }
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Engineering portfolio design system based on the provided color palette</h2>
+
+<div class="section" style="padding-top: 2rem;">
+  <div class="section-label">Palette score</div>
+  <div style="background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1.25rem;">
+    <div class="score-bar"><span class="bar-label">Contrast & legibility</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="bar-score">9 / 10</span></div>
+    <div class="score-bar"><span class="bar-label">Technical personality</span><div class="bar-track"><div class="bar-fill" style="width:95%"></div></div><span class="bar-score">9.5 / 10</span></div>
+    <div class="score-bar"><span class="bar-label">Harmony & cohesion</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="bar-score">9 / 10</span></div>
+    <div class="score-bar"><span class="bar-label">Versatility</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="bar-score">7.5 / 10</span></div>
+    <div class="score-bar"><span class="bar-label">Memorability</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><span class="bar-score">8.5 / 10</span></div>
+    <div class="score-summary">
+      <div class="score-big">8.7</div>
+      <div class="score-text"><strong style="color: var(--ds-light);">Excellent for engineering portfolio.</strong><br>Cool, precise, and trustworthy. The navy anchors authority while sky blue carries the UI. Slight demerit for lack of a built-in warm accent — added #E8A24B to round it out.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="padding-top: 1.5rem;">
+  <div class="section-label">Color tokens</div>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#355872"></div>
+      <div class="swatch-info"><div class="swatch-name">Navy</div><div class="swatch-hex">#355872</div><div class="swatch-role">Primary · Nav · CTA</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#7AAACE"></div>
+      <div class="swatch-info"><div class="swatch-name">Sky</div><div class="swatch-hex">#7AAACE</div><div class="swatch-role">Links · Borders · Active</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#9CD5FF"></div>
+      <div class="swatch-info"><div class="swatch-name">Ice</div><div class="swatch-hex">#9CD5FF</div><div class="swatch-role">Highlights · On dark</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#F7F8F0; border: 0.5px solid #ddd;"></div>
+      <div class="swatch-info"><div class="swatch-name">Cream</div><div class="swatch-hex">#F7F8F0</div><div class="swatch-role">Page background</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#E8A24B"></div>
+      <div class="swatch-info"><div class="swatch-name">Amber ✦</div><div class="swatch-hex">#E8A24B</div><div class="swatch-role">Accent · Callouts</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#1C2E3A"></div>
+      <div class="swatch-info"><div class="swatch-name">Ink ✦</div><div class="swatch-hex">#1C2E3A</div><div class="swatch-role">Body text · Headings</div></div>
+    </div>
+  </div>
+  <p style="font-size: 10px; color: var(--ds-muted); margin-top: 8px;">✦ Derived tokens — not in original palette but extrapolated for completeness</p>
+</div>
+
+<div class="section" style="padding-top: 1.5rem;">
+  <div class="section-label">Type scale</div>
+  <div style="background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1rem 1.25rem;">
+    <div class="type-row"><span class="type-meta">display / 32px 700</span><span class="t-display">Alex Chen</span></div>
+    <div class="type-row"><span class="type-meta">h1 / 24px 600</span><span class="t-h1">Software Engineer</span></div>
+    <div class="type-row"><span class="type-meta">h2 / 18px 600</span><span class="t-h2">Featured Projects</span></div>
+    <div class="type-row"><span class="type-meta">h3 / 15px 600</span><span class="t-h3">Infrastructure · Backend · APIs</span></div>
+    <div class="type-row"><span class="type-meta">body / 15px 400</span><span class="t-body">Building reliable systems that scale. 5 years shipping production code.</span></div>
+    <div class="type-row"><span class="type-meta">label / 11px 600 caps</span><span class="t-label">Work experience</span></div>
+    <div class="type-row"><span class="type-meta">mono / 13px code</span><span class="t-mono">const deploy = () => ship()</span></div>
+  </div>
+</div>
+
+<div class="section" style="padding-top: 1.5rem;">
+  <div class="section-label">Components</div>
+
+  <div style="margin-bottom: 12px;">
+    <div class="nav-demo">
+      <span class="nav-logo">AC.</span>
+      <div class="nav-links">
+        <a class="nav-link active">Work</a>
+        <a class="nav-link">About</a>
+        <a class="nav-link">Writing</a>
+      </div>
+      <span class="nav-cta">Hire me</span>
+    </div>
+  </div>
+
+  <div class="components-grid" style="margin-bottom: 12px;">
+    <div class="btn-demo" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+      <div class="section-label" style="margin-bottom: 0;">Buttons</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-primary">View project</button>
+        <button class="btn btn-secondary">Resume</button>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn btn-ghost">GitHub ↗</button>
+        <button class="btn btn-accent">Contact me</button>
+      </div>
+    </div>
+    <div class="badge-demo" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+      <div class="section-label" style="margin-bottom: 0;">Badges</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span class="badge badge-tech">Python</span>
+        <span class="badge badge-tech">Go</span>
+        <span class="badge badge-tech">Kubernetes</span>
+      </div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <span class="badge badge-open">Open to work</span>
+        <span class="badge badge-new">New</span>
+        <span class="badge badge-featured">Featured</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="components-grid" style="margin-bottom: 12px;">
+    <div class="hero-card full-col">
+      <div class="avatar">AC</div>
+      <div>
+        <div class="hero-name">Alex Chen</div>
+        <div class="hero-role">Senior Software Engineer · San Francisco</div>
+        <div class="hero-bio">I build distributed systems and developer tools. Currently at Stripe, previously Cloudflare.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="components-grid" style="margin-bottom: 12px;">
+    <div class="proj-card">
+      <div class="proj-thumb"><span class="proj-thumb-icon">⚙️</span></div>
+      <div class="proj-body">
+        <div class="proj-title">StreamDB — Distributed log</div>
+        <div class="proj-desc">Kafka-compatible event store handling 2M msgs/sec with sub-ms latency.</div>
+        <div class="proj-tags">
+          <span class="badge badge-tech">Go</span>
+          <span class="badge badge-tech">Raft</span>
+          <span class="badge badge-featured">Featured</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="section-label" style="margin-bottom: 12px;">Skills</div>
+      <div class="skill-row"><div class="skill-header"><span class="skill-name">Systems design</span><span class="skill-pct">95%</span></div><div class="skill-track"><div class="skill-fill strong" style="width:95%"></div></div></div>
+      <div class="skill-row"><div class="skill-header"><span class="skill-name">Go / Rust</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill strong" style="width:88%"></div></div></div>
+      <div class="skill-row"><div class="skill-header"><span class="skill-name">Kubernetes</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" style="width:80%"></div></div></div>
+      <div class="skill-row"><div class="skill-header"><span class="skill-name">Python / APIs</span><span class="skill-pct">92%</span></div><div class="skill-track"><div class="skill-fill" style="width:92%"></div></div></div>
+    </div>
+  </div>
+
+  <div class="components-grid" style="margin-bottom: 12px;">
+    <div class="timeline-card">
+      <div class="section-label" style="margin-bottom: 12px;">Experience</div>
+      <div class="timeline-item">
+        <div class="tl-dot-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div><div class="tl-role">Senior SWE</div><div class="tl-company">Stripe</div><div class="tl-date">2022 – present</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background: var(--ds-mid)"></div><div class="tl-line"></div></div>
+        <div><div class="tl-role">SWE II</div><div class="tl-company">Cloudflare</div><div class="tl-date">2020 – 2022</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background: var(--ds-mid)"></div></div>
+        <div><div class="tl-role">Software Engineer</div><div class="tl-company">DataDog</div><div class="tl-date">2018 – 2020</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="stats-row" style="margin-bottom: 12px;">
+        <div class="stat-card"><div class="stat-val">14</div><div class="stat-label">Projects shipped</div></div>
+        <div class="stat-card"><div class="stat-val">6y</div><div class="stat-label">Experience</div></div>
+        <div class="stat-card"><div class="stat-val">3</div><div class="stat-label">Open source</div></div>
+      </div>
+      <div style="background: var(--ds-navy); border-radius: 12px; padding: 1rem 1.25rem;">
+        <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(247,248,240,0.5); margin-bottom: 6px;">Currently exploring</div>
+        <div style="font-size: 14px; color: var(--ds-light); line-height: 1.5;">WebAssembly runtimes and edge compute infrastructure.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section pb" style="padding-top: 1.5rem;">
+  <div class="section-label">Spacing & layout tokens</div>
+  <div style="background: white; border: 0.5px solid var(--ds-border); border-radius: 12px; padding: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12px;">
+    <div><span style="color: var(--ds-muted);">Border radius</span><br><code style="color: var(--ds-navy);">sm 6px · md 10px · lg 12px</code></div>
+    <div><span style="color: var(--ds-muted);">Spacing scale</span><br><code style="color: var(--ds-navy);">4 · 8 · 12 · 16 · 24 · 32 · 48px</code></div>
+    <div><span style="color: var(--ds-muted);">Max content width</span><br><code style="color: var(--ds-navy);">720px (centered)</code></div>
+    <div><span style="color: var(--ds-muted);">Column grid</span><br><code style="color: var(--ds-navy);">12-col · 24px gutter</code></div>
+    <div><span style="color: var(--ds-muted);">Card border</span><br><code style="color: var(--ds-navy);">0.5px solid rgba(53,88,114,.15)</code></div>
+    <div><span style="color: var(--ds-muted);">Transition</span><br><code style="color: var(--ds-navy);">all 150ms ease</code></div>
+  </div>
+</div>
