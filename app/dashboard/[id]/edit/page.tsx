@@ -14,16 +14,36 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
 
     if (!entry) notFound();
 
+    const latestPublished = await prisma.changelogEntry.findFirst({
+        where: {
+            repoId: entry.repoId,
+            status: "PUBLISHED",
+            version: { not: null },
+        },
+        orderBy: { publishedAt: "desc" },
+    });
+
+    const latestVersion = latestPublished?.version || "1.0.0";
+    const cleanVersion = latestVersion.replace(/^v/, "");
+    const parts = cleanVersion.split(".");
+    const major = parseInt(parts[0]) || 1;
+    const minor = parseInt(parts[1]) || 0;
+    const patch = parseInt(parts[2]) || 0;
+
+    const nextPatch = `${major}.${minor}.${patch + 1}`;
+    const nextMinor = `${major}.${minor + 1}.0`;
+    const nextMajor = `${major + 1}.0.0`;
+
     return (
         <div className="min-h-screen" style={{ background: "var(--ds-white)" }}>
-            <div className="max-w-content mx-auto px-4 py-8">
+            <div className="max-w-7xl mx-auto px-4 py-8">
                 <Nav showDashboard />
 
                 <div className="mt-10 mb-6 flex items-start justify-between">
                     <div>
                         <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-muted mb-1">
                             {entry.repo.owner}/{entry.repo.name}
-                            {entry.prNumber ? ` · PR #${entry.prNumber}` : ""}
+                            {entry.prNumber ? ` . PR #${entry.prNumber}` : ""}
                         </p>
                         <h1 className="text-[24px] font-semibold text-ink">{entry.title}</h1>
                     </div>
@@ -51,7 +71,12 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
                     </div>
                 </div>
 
-                <EditForm entry={entry} />
+                <EditForm
+                    entry={entry}
+                    nextPatch={nextPatch}
+                    nextMinor={nextMinor}
+                    nextMajor={nextMajor}
+                />
             </div>
         </div>
     );
