@@ -6,13 +6,15 @@ An automated, AI-powered developer tool designed to ingest GitHub Pull Requests,
 
 ## Key Features
 
+*   **Interactive Git Diff Pane**: Live, split-screen code view that color-codes additions and deletions side-by-side, giving complete context to the reviewer.
+*   **Live Markdown Preview Workspace**: Tabbed content editor featuring a real-time markdown renderer with elegant typography spacing.
+*   **One-Click SemVer Recommendations**: Automatically suggests major, minor, and patch targets based on the AI's impact classification.
+*   **Real-Time Command Dashboard**: Search pull requests, filter codebase logs instantly by repository, and trigger instant inline publishing without redirects.
+*   **Chronological axis timeline**: Beautiful public-facing history thread utilizing concentric nodes, category borders, and custom GitHub integration badges.
 *   **AI-Powered Classification**: Translates complex Git/GitHub PR diffs, titles, and descriptions into clean, present-tense, user-facing summaries.
-*   **Multi-category Taxonomy**: Smart classification of changes into `FEATURE`, `BUGFIX`, `BREAKING`, and `INTERNAL` categories.
-*   **Semantic Versioning Recommendations**: Suggests version bumps (`major`, `minor`, `patch`) based on the nature of the parsed changes.
+*   **Multi-category Taxonomy**: Smart classification of changes into FEATURE, BUGFIX, BREAKING, and INTERNAL categories.
 *   **Background Job Queue**: Uses Redis & BullMQ to asynchronously process webhooks, run AI generation jobs, and ensure reliable execution.
 *   **Database Integration**: Leverages PostgreSQL and Prisma to track GitHub installations, repositories, generated entries, and granular change logs.
-*   **Rich Text Editor**: Equipped with Tiptap Editor (`@tiptap/react`) to allow developers to refine and publish generated changelog drafts manually.
-*   **Authentication Ready**: NextAuth.js is pre-configured to easily manage logins and connect GitHub accounts.
 
 ---
 
@@ -57,7 +59,8 @@ changelog-writer/
 │   └── test-classifier.ts    # CLI script for testing LLM/Groq classifier on fake PRs
 ├── docker-compose.yml        # Multi-container setup for local Postgres & Redis
 ├── package.json              # Project scripts and dependencies
-└── tsconfig.json             # TypeScript compiler settings
+├── tsconfig.json             # TypeScript compiler settings
+└── README.md                 # Project documentation
 ```
 
 ---
@@ -113,10 +116,10 @@ erDiagram
 ### Key Models & Types:
 *   **`Installation`**: Tracks authorized GitHub App installations for users/organizations.
 *   **`Repo`**: Holds repository metadata linked to an installation.
-*   **`ChangelogEntry`**: Captures a single changelog release, raw diffs (`rawDiff`), AI-generated drafts (`aiDraft`), and publication details.
+*   **`ChangelogEntry`**: Captures a single changelog release, raw diffs, AI-generated drafts, and publication details.
 *   **`Change`**: Detailed change items mapped to a specific entry, classifying files and impact.
-*   **`ChangeType`**: Enum with `FEATURE`, `BUGFIX`, `BREAKING`, and `INTERNAL`.
-*   **`EntryStatus`**: Enum with `DRAFT`, `PUBLISHED`, and `ARCHIVED`.
+*   **`ChangeType`**: Enum with FEATURE, BUGFIX, BREAKING, and INTERNAL.
+*   **`EntryStatus`**: Enum with DRAFT, PUBLISHED, and ARCHIVED.
 
 ---
 
@@ -153,13 +156,8 @@ It parses this data into structured JSON matching this schema:
 Create a `.env` file in the root directory and configure the following parameters:
 
 ```env
-# Database Connection (Postgres)
 DATABASE_URL="postgresql://postgres:dev@localhost:5432/changelog"
-
-# Redis Queue Connection
 REDIS_URL="redis://localhost:6379"
-
-# Groq Cloud API Key
 GROQ_API_KEY="your-groq-api-key-here"
 ```
 
@@ -233,15 +231,11 @@ Once the job is queued, watch Terminal 1. The worker will pick it up, run AI cla
 *   **Terminal 1 — Start the Worker:**
     ```bash
     npm run worker
-    # OR
-    npx worker
     ```
 
 *   **Terminal 2 — Add a Test Job:**
     ```bash
     npm run test-queue
-    # OR
-    npx test-queue
     ```
 
 ---
@@ -269,4 +263,3 @@ export const prisma = new PrismaClient({
   adapter,
 });
 ```
-
