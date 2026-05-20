@@ -1,0 +1,423 @@
+
+<h2 class="sr-only">Full tech stack breakdown for the AI changelog writer project</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.root{padding:1.5rem 0;font-family:var(--font-sans)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.tab{padding:6px 14px;border-radius:20px;border:0.5px solid var(--color-border-secondary);font-size:13px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s}
+.tab.on{background:var(--color-background-tertiary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.sec{display:none}.sec.on{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.card-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.card-meta{flex:1}
+.card-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.card-sub{font-size:12px;color:var(--color-text-tertiary)}
+.badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.b-red{background:#FAECE7;color:#993C1D}
+.b-blue{background:#E6F1FB;color:#185FA5}
+.b-green{background:#EAF3DE;color:#3B6D11}
+.b-purple{background:#EEEDFE;color:#534AB7}
+.b-amber{background:#FAEEDA;color:#854F0B}
+.b-gray{background:#F1EFE8;color:#5F5E5A}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:10px 0}
+.row{display:flex;align-items:flex-start;gap:10px;padding:6px 0}
+.row-icon{font-size:15px;color:var(--color-text-tertiary);width:20px;flex-shrink:0;padding-top:1px}
+.row-content{flex:1}
+.row-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+.row-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.55}
+code{font-family:var(--font-mono);font-size:11px;background:var(--color-background-secondary);padding:1px 5px;border-radius:4px;color:var(--color-text-primary)}
+.why-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-top:8px;border-left:2px solid var(--color-border-secondary)}
+.slabel{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px}
+.slabel:first-child{margin-top:0}
+.ask{display:inline-flex;align-items:center;gap:5px;margin-top:10px;padding:6px 12px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-primary);cursor:pointer}
+.ask:hover{background:var(--color-background-secondary)}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.option{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.option-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.option-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.chosen{border:0.5px solid var(--color-border-info);background:var(--color-background-info)}
+.chosen .option-title{color:var(--color-text-info)}
+</style>
+<div class="root">
+<div class="tabs">
+  <button class="tab on" onclick="show('frontend',this)">Frontend</button>
+  <button class="tab" onclick="show('backend',this)">Backend</button>
+  <button class="tab" onclick="show('db',this)">Database</button>
+  <button class="tab" onclick="show('ai',this)">AI layer</button>
+  <button class="tab" onclick="show('infra',this)">Infrastructure</button>
+  <button class="tab" onclick="show('github',this)">GitHub layer</button>
+  <button class="tab" onclick="show('why',this)">Why this stack</button>
+</div>
+
+<!-- FRONTEND -->
+<div id="frontend" class="sec on">
+  <p class="slabel">What the user sees and interacts with</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#E6F1FB"><i class="ti ti-brand-nextjs" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Next.js 14 (App Router)</div>
+        <div class="card-sub">React framework — handles routing, SSR, and API routes in one</div>
+      </div>
+      <span class="badge b-red">Core</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-route" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">App Router</div><div class="row-desc">File-based routing. <code>/[owner]/[repo]/page.tsx</code> is the public changelog URL. <code>/dashboard/page.tsx</code> is the private edit view. No config needed.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-server" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Server components</div><div class="row-desc">The public changelog page fetches directly from Postgres in a server component — no API call needed, no client-side data fetching. Renders as static HTML. Fast.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-api" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">API routes</div><div class="row-desc">The webhook receiver (<code>/api/webhooks/github</code>) and publish endpoint (<code>/api/entries/[id]/publish</code>) live here. No separate Express server needed.</div></div></div>
+    <div class="why-box">Next.js lets you run the frontend, the webhook API, and the auth layer from one codebase deployed to one place (Vercel). You don't need a separate API server for this project.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EEEDFE"><i class="ti ti-palette" style="color:#534AB7" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Tailwind CSS + shadcn/ui</div>
+        <div class="card-sub">Styling and component library</div>
+      </div>
+      <span class="badge b-purple">UI</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-wind" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Tailwind CSS</div><div class="row-desc">Utility-first CSS. You write <code>className="flex items-center gap-3 text-sm"</code> instead of writing separate CSS files. Standard at all modern startups.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-components" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">shadcn/ui</div><div class="row-desc">Pre-built accessible components (Button, Badge, Card, Separator) that you copy into your project and own. Used for the dashboard UI. Not a dependency — you paste the source.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EAF3DE"><i class="ti ti-pencil" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Tiptap (rich text editor)</div>
+        <div class="card-sub">The draft editing interface</div>
+      </div>
+      <span class="badge b-green">Editor</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-text-size" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What it does</div><div class="row-desc">The AI writes a draft changelog in markdown. Tiptap renders it as an editable rich text area — like a lightweight Notion editor. Maintainers can tweak wording before publishing.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-code" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Why Tiptap and not a plain textarea</div><div class="row-desc">Changelog entries have structure — bullet points, bold change types, code names. A plain textarea loses that. Tiptap gives you a real editor with proper HTML output that renders correctly on the public page.</div></div></div>
+    <button class="ask" onclick="sendPrompt('Show me how to set up Tiptap in the changelog draft editor with bold, bullet lists and markdown paste support')">Show me the Tiptap setup ↗</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAEEDA"><i class="ti ti-lock" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">NextAuth.js</div>
+        <div class="card-sub">Authentication — GitHub OAuth login</div>
+      </div>
+      <span class="badge b-amber">Auth</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-brand-github" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">GitHub OAuth provider</div><div class="row-desc">Users sign in with their GitHub account. After login you get their GitHub username — which matches the <code>owner</code> field in your repos table. This is how the dashboard knows which repos belong to the logged-in user.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-shield-check" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Route protection</div><div class="row-desc">The <code>/dashboard</code> route checks the session — only the repo owner can see and edit their drafts. Public <code>/[owner]/[repo]</code> pages are accessible to everyone without login.</div></div></div>
+  </div>
+</div>
+
+<!-- BACKEND -->
+<div id="backend" class="sec">
+  <p class="slabel">The processing engine — runs separately from the frontend</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#E6F1FB"><i class="ti ti-brand-nodejs" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Node.js worker process</div>
+        <div class="card-sub">Standalone process that runs the job queue — separate from Next.js</div>
+      </div>
+      <span class="badge b-red">Core</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-settings" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Why a separate process</div><div class="row-desc">Next.js API routes have a 10-second timeout on Vercel. Fetching a diff + calling an LLM can take 15–30 seconds. The worker runs on Railway with no timeout limit — it processes jobs at its own pace.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-file-code" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">TypeScript + tsx</div><div class="row-desc">The worker is written in TypeScript and run with <code>tsx</code> — no separate compile step during development. In production it compiles to plain JS first with <code>tsc</code>.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAECE7"><i class="ti ti-stack" style="color:#993C1D" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">BullMQ</div>
+        <div class="card-sub">The job queue — sits between the webhook receiver and the worker</div>
+      </div>
+      <span class="badge b-red">Core</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-arrows-right-left" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What it does</div><div class="row-desc">When a webhook fires, the Next.js API route adds a job to BullMQ and immediately returns <code>200 OK</code> to GitHub. The worker picks it up asynchronously. GitHub doesn't wait for the LLM call to finish.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-refresh" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Retries + deduplication</div><div class="row-desc">If the LLM call fails, BullMQ retries automatically with exponential backoff. The <code>jobId</code> is the PR id — so if GitHub re-delivers the same webhook, BullMQ silently ignores the duplicate.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-database" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Backed by Redis</div><div class="row-desc">BullMQ stores the job queue in Redis. Jobs survive worker restarts — if your Railway worker crashes mid-processing, the job stays in the queue and gets picked up when it restarts.</div></div></div>
+    <button class="ask" onclick="sendPrompt('Show me the full BullMQ setup for the changelog worker including retry config and job deduplication')">Show me the BullMQ setup ↗</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EAF3DE"><i class="ti ti-brand-github" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Octokit</div>
+        <div class="card-sub">GitHub's official Node.js SDK</div>
+      </div>
+      <span class="badge b-green">GitHub SDK</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-git-pull-request" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What it fetches</div><div class="row-desc">After a webhook fires, Octokit fetches: the PR title, description, list of changed files, and the actual diffs (patch strings). This is the raw material the LLM classifier works from.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-key" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">GitHub App auth</div><div class="row-desc">Octokit uses a short-lived installation token (not a static PAT) to authenticate. Each token lasts 1 hour and is scoped to one repo installation. More secure than a personal access token.</div></div></div>
+  </div>
+</div>
+
+<!-- DATABASE -->
+<div id="db" class="sec">
+  <p class="slabel">How and where data is stored</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#E6F1FB"><i class="ti ti-database" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">PostgreSQL</div>
+        <div class="card-sub">The primary database — stores everything</div>
+      </div>
+      <span class="badge b-red">Core</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-table" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What's in it</div><div class="row-desc">Five tables: <code>Installation</code> (GitHub App installs), <code>Repo</code> (tracked repos), <code>ChangelogEntry</code> (one per PR), <code>Change</code> (individual classified changes), and NextAuth session tables.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-clock" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Why Postgres over MongoDB</div><div class="row-desc">Changelog data is highly relational — an Entry has many Changes, a Repo has many Entries, an Installation has many Repos. SQL joins handle this cleanly. MongoDB would require manual reference lookups.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EEEDFE"><i class="ti ti-schema" style="color:#534AB7" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Prisma ORM</div>
+        <div class="card-sub">TypeScript-first database client</div>
+      </div>
+      <span class="badge b-purple">ORM</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-code" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Type safety end-to-end</div><div class="row-desc">Prisma generates TypeScript types from your schema. When you write <code>db.changelogEntry.create({...})</code>, TypeScript knows exactly what fields are required and what types they are. No runtime surprises.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-history" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Migrations</div><div class="row-desc">Every schema change creates a versioned SQL migration file. Run <code>prisma migrate dev</code> locally and <code>prisma migrate deploy</code> in production. Your schema changes are tracked in git alongside your code.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-eye" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Prisma Studio</div><div class="row-desc">A visual DB browser that comes free with Prisma. Run <code>npx prisma studio</code> — opens a web UI to browse and edit your data. Invaluable during development instead of raw SQL queries.</div></div></div>
+    <button class="ask" onclick="sendPrompt('Show me the full Prisma schema for the changelog app with all relationships')">Show me the full schema ↗</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAEEDA"><i class="ti ti-bolt" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Redis</div>
+        <div class="card-sub">In-memory store — used exclusively for the job queue</div>
+      </div>
+      <span class="badge b-amber">Queue store</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-layers-intersect" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Role in this project</div><div class="row-desc">Redis only stores BullMQ job state — pending, active, completed, failed jobs. It does not store application data. Postgres handles all persistent data. Redis is ephemeral and can be flushed without data loss.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-server" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Local setup</div><div class="row-desc">One line in <code>docker-compose.yml</code> — <code>image: redis:7-alpine</code>. In production, Railway provisions a Redis instance for you automatically when you add the Redis plugin.</div></div></div>
+  </div>
+</div>
+
+<!-- AI LAYER -->
+<div id="ai" class="sec">
+  <p class="slabel">The intelligence — how raw diffs become human-readable changelog entries</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAECE7"><i class="ti ti-brain" style="color:#993C1D" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Anthropic SDK (Claude)</div>
+        <div class="card-sub">The LLM doing classification and writing</div>
+      </div>
+      <span class="badge b-red">Core AI</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-message-2" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What the model does</div><div class="row-desc">It receives a PR title, PR description, and a truncated diff. It returns structured JSON — a change type (FEATURE / BUGFIX / BREAKING / INTERNAL), a one-sentence user-facing summary, and a suggested semver bump.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-braces" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Structured output — not prose</div><div class="row-desc">The prompt instructs the model to return only valid JSON. The worker parses this and inserts typed rows into Postgres. If the model misbehaves and returns prose, the <code>try/catch</code> falls back to a safe default.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-cut" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Context management</div><div class="row-desc">Large diffs are truncated to 12,000 characters before being sent. Lock files, minified files, and sourcemaps are filtered out. The diff never exceeds the model's context window and costs stay predictable.</div></div></div>
+    <button class="ask" onclick="sendPrompt('Show me the full LLM classification prompt for the changelog writer with examples of good and bad output')">Show me the full prompt ↗</button>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EEEDFE"><i class="ti ti-replace" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Can swap to OpenAI</div>
+        <div class="card-sub">The LLM is swappable — same prompt works on GPT-4o</div>
+      </div>
+      <span class="badge b-gray">Optional</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-plug" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Why it doesn't matter which one</div><div class="row-desc">The classifier is one isolated function. You call it with a string, it returns JSON. Swapping Anthropic for OpenAI is changing 4 lines in one file. The rest of the system doesn't care.</div></div></div>
+  </div>
+</div>
+
+<!-- INFRASTRUCTURE -->
+<div id="infra" class="sec">
+  <p class="slabel">Where everything runs</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#F1EFE8"><i class="ti ti-triangle" style="color:#5F5E5A" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Vercel</div>
+        <div class="card-sub">Hosts the Next.js frontend + API routes</div>
+      </div>
+      <span class="badge b-red">Frontend host</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-rocket" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Zero config deployment</div><div class="row-desc">Push to main branch → Vercel detects Next.js → builds and deploys automatically. Your app is live at <code>changelog-writer.vercel.app</code> within 2 minutes. No server config, no Nginx, no SSL setup.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-world" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Free tier is enough</div><div class="row-desc">Vercel's free hobby plan handles this project's traffic easily. The only limit is that serverless functions timeout at 10 seconds — which is why the LLM processing happens in the Railway worker, not here.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAEEDA"><i class="ti ti-train" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Railway</div>
+        <div class="card-sub">Hosts the Node.js worker + Redis + Postgres in production</div>
+      </div>
+      <span class="badge b-amber">Backend host</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-clock-pause" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">No timeout limits</div><div class="row-desc">Unlike Vercel, Railway runs your process continuously. The BullMQ worker sits there permanently, picking up jobs as they arrive. An LLM call that takes 30 seconds is fine here.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-plug-connected" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">One-click Redis and Postgres</div><div class="row-desc">In the Railway dashboard, click "Add plugin" → Redis or Postgres. Railway provisions it and injects <code>REDIS_URL</code> and <code>DATABASE_URL</code> automatically into your worker's environment. No separate database service needed.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-box" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Docker deployment</div><div class="row-desc">The worker has a simple Dockerfile. Railway detects it, builds the image, and deploys. Costs ~$5/month on the starter plan for a project of this scale.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EAF3DE"><i class="ti ti-box" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Docker (local dev only)</div>
+        <div class="card-sub">Runs Postgres and Redis locally without installing them</div>
+      </div>
+      <span class="badge b-green">Dev tool</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-terminal" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">One command local setup</div><div class="row-desc"><code>docker-compose up -d</code> starts both Postgres on port 5432 and Redis on port 6379. No local installation of either service. Stop with <code>docker-compose down</code>. Data persists in a Docker volume between restarts.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#E6F1FB"><i class="ti ti-mail-forward" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Resend</div>
+        <div class="card-sub">Sends the post-publish email summary (optional feature)</div>
+      </div>
+      <span class="badge b-gray">Optional</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-send" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What it sends</div><div class="row-desc">When a maintainer publishes a changelog entry, Resend fires an email to anyone who subscribed to that repo's changelog. Clean HTML email with the entry content. Free tier: 3,000 emails/month.</div></div></div>
+  </div>
+</div>
+
+<!-- GITHUB LAYER -->
+<div id="github" class="sec">
+  <p class="slabel">The GitHub integration — what connects your app to repos</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#F1EFE8"><i class="ti ti-brand-github" style="color:#5F5E5A" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">GitHub App</div>
+        <div class="card-sub">The identity your app uses to interact with GitHub</div>
+      </div>
+      <span class="badge b-red">Core</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-apps" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">App vs OAuth vs PAT</div></div></div>
+    <div class="compare-row">
+      <div class="option"><div class="option-title">Personal Access Token</div><div class="option-desc">Tied to one user. If that person leaves, the token breaks. No webhook support.</div></div>
+      <div class="option"><div class="option-title">OAuth App</div><div class="option-desc">User authorises your app. You get their token. Still user-scoped, not repo-scoped.</div></div>
+    </div>
+    <div class="compare-row">
+      <div class="option chosen"><div class="option-title">GitHub App ✓ (what we use)</div><div class="option-desc">Installs on repos directly. Scoped permissions. Short-lived tokens. Receives webhooks automatically. The right choice for any production tool.</div></div>
+      <div class="option" style="opacity:.4"><div class="option-title"></div></div>
+    </div>
+    <div class="why-box">A GitHub App is what Vercel, Linear, and Dependabot use to integrate with your repos. It's the professional-grade approach and the one that teaches you the most.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EAF3DE"><i class="ti ti-webhook" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">GitHub Webhooks</div>
+        <div class="card-sub">How GitHub tells your app something happened</div>
+      </div>
+      <span class="badge b-green">Event system</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-git-merge" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Events you subscribe to</div><div class="row-desc">Two events: <code>pull_request</code> (fires on PR merge) and <code>push</code> (fires on direct commits to main). GitHub sends an HTTPS POST to your webhook URL within seconds of the event.</div></div></div>
+    <div class="divider"></div>
+    <div class="row"><div class="row-icon"><i class="ti ti-shield" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">HMAC signature verification</div><div class="row-desc">Every webhook has a <code>X-Hub-Signature-256</code> header — an HMAC-SHA256 signature of the payload using your webhook secret. You verify this before processing anything. Rejects spoofed requests.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EEEDFE"><i class="ti ti-package" style="color:#534AB7" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Octokit SDK</div>
+        <div class="card-sub">Official GitHub TypeScript SDK</div>
+      </div>
+      <span class="badge b-purple">SDK</span>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-api" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">Packages used</div><div class="row-desc"><code>@octokit/app</code> handles GitHub App auth (JWT signing, installation token generation). <code>@octokit/rest</code> provides typed methods for every GitHub API endpoint — <code>pulls.get()</code>, <code>pulls.listFiles()</code>, etc.</div></div></div>
+  </div>
+</div>
+
+<!-- WHY THIS STACK -->
+<div id="why" class="sec">
+  <p class="slabel">Why these choices were made — not just what they are</p>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAECE7"><i class="ti ti-git-branch" style="color:#993C1D" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Why TypeScript everywhere</div>
+        <div class="card-sub">Not just for code quality</div>
+      </div>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-link" aria-hidden="true"></i></div><div class="row-content"><div class="row-desc">Prisma generates types from your schema. Octokit ships types for every GitHub API response. The LLM classifier returns a typed interface. When you pass data from one layer to another, TypeScript catches mismatches at compile time — not in production when a missing field crashes a job.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#E6F1FB"><i class="ti ti-layout-split" style="color:#185FA5" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Why Next.js handles webhooks</div>
+        <div class="card-sub">Instead of a separate Express server</div>
+      </div>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-minus" aria-hidden="true"></i></div><div class="row-content"><div class="row-desc">The webhook receiver does almost nothing — verify signature, add job to queue, return 200. That's 15 lines of code. Running a separate Express server for 15 lines is unnecessary overhead. A Next.js API route is perfect for this. The heavy work happens in the Railway worker.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#EAF3DE"><i class="ti ti-traffic-lights" style="color:#3B6D11" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">Why BullMQ and not just a setTimeout</div>
+        <div class="card-sub">The difference between a toy and a real system</div>
+      </div>
+    </div>
+    <div class="row"><div class="row-icon"><i class="ti ti-x" aria-hidden="true"></i></div><div class="row-content"><div class="row-title">What breaks without a queue</div><div class="row-desc">If you call the LLM inline in the webhook handler: GitHub waits 30 seconds and retries, causing duplicate processing. A server restart loses in-flight jobs. 10 simultaneous PRs overwhelm the API rate limit. BullMQ solves all three — jobs persist in Redis, retries are automatic, concurrency is configurable.</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="icon" style="background:#FAEEDA"><i class="ti ti-topology-star" style="color:#854F0B" aria-hidden="true"></i></div>
+      <div class="card-meta">
+        <div class="card-title">The full data flow in one sentence</div>
+        <div class="card-sub">From commit to published changelog</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.8;padding:4px 0">
+      GitHub fires a webhook → Next.js API route verifies signature + enqueues a BullMQ job → Railway worker dequeues it → Octokit fetches the PR diff → Claude classifies the changes into typed JSON → Prisma writes a DRAFT entry to Postgres → maintainer logs in via GitHub OAuth, edits the Tiptap draft, clicks publish → entry status flips to PUBLISHED → public Next.js page reads it from Postgres and renders it as HTML.
+    </div>
+    <button class="ask" onclick="sendPrompt('Walk me through building the changelog app step by step starting from Part 2 — database schema first')">Start building step by step ↗</button>
+  </div>
+</div>
+
+</div>
+<script>
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+</script>
