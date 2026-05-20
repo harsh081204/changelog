@@ -1,10 +1,21 @@
-# AI Changelog Writer
+# 🚀 AI Changelog Writer (changelog.)
 
-An automated, AI-powered developer tool designed to ingest GitHub Pull Requests, classify their technical impact, and auto-generate beautifully structured, user-facing changelog entries. Built with Next.js, React, Tailwind CSS v4, Prisma, Groq SDK, and BullMQ.
+[![Next.js 16](https://img.shields.io/badge/Next.js-16.2.6-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Prisma 7](https://img.shields.io/badge/Prisma-7.8.0-2D3748?style=flat-square&logo=prisma)](https://prisma.io/)
+[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind%20CSS-v4.0-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Groq SDK](https://img.shields.io/badge/Groq%20LLM-Llama--3.3-orange?style=flat-square&logo=openai)](https://groq.com/)
+[![BullMQ](https://img.shields.io/badge/Queue-BullMQ%20%26%20Redis-red?style=flat-square&logo=redis)](https://bullmq.io/)
+
+An elegant, **AI-powered developer platform** designed to ingest GitHub Pull Requests, classify their technical impact, and auto-generate beautifully structured, user-facing changelog entries. Built as a high-fidelity workspace with sub-second background execution.
 
 ---
 
-## Key Features
+## 🎨 Interactive Live Sandbox
+We've introduced a state-of-the-art **Interactive Release Lab** directly on the [homepage](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/app/page.tsx). Developers can instantly select preset PR diffs (Features, Bugfixes, or Relational Database migrations), run a simulated LLM generation pipeline, and preview real-time SemVer classification updates side-by-side.
+
+---
+
+## ✨ Key Features
 
 *   **Interactive Git Diff Pane**: Live, split-screen code view that color-codes additions and deletions side-by-side, giving complete context to the reviewer.
 *   **Live Markdown Preview Workspace**: Tabbed content editor featuring a real-time markdown renderer with elegant typography spacing.
@@ -18,12 +29,12 @@ An automated, AI-powered developer tool designed to ingest GitHub Pull Requests,
 
 ---
 
-## Technology Stack
+## 🛠️ Technology Stack
 
 | Technology | Purpose | Key Package(s) |
 | :--- | :--- | :--- |
 | **Core Framework** | React 19 & Next.js 16 (App Router) | `next`, `react`, `react-dom` |
-| **Styling & UI** | Tailwind CSS v4 & Lucide Icons | `tailwindcss`, `lucide-react`, `class-variance-authority` |
+| **Styling & UI** | Tailwind CSS v4 & Lucide Icons | `tailwindcss`, `lucide-react` |
 | **Database ORM** | PostgreSQL Database | `@prisma/client`, `prisma` |
 | **AI Processing** | Groq Cloud LLM Integration | `groq-sdk` (running `llama-3.3-70b-versatile`) |
 | **Background Tasks** | Redis-backed Job Processing Queue | `bullmq`, `ioredis` |
@@ -32,7 +43,7 @@ An automated, AI-powered developer tool designed to ingest GitHub Pull Requests,
 
 ---
 
-## Directory Structure
+## 📂 Directory Structure
 
 The project has a modular, scalable folder layout:
 
@@ -42,8 +53,12 @@ changelog-writer/
 │   ├── generated/            # Automatically generated Prisma client
 │   │   └── prisma/
 │   ├── globals.css           # Global Tailwind CSS imports and variable tokens
-│   ├── layout.tsx            # Main HTML wrapper & font configuration
-│   └── page.tsx              # Application home page
+│   ├── layout.tsx            # Main HTML layout, secures app with SessionProvider
+│   ├── SessionProvider.tsx   # React Client context for managing user authentication
+│   └── page.tsx              # Beautiful, interactive product landing page
+├── components/               # Shared frontend components
+│   └── ui/
+│       └── Nav.tsx           # Navigation bar with login statuses & signOut controls
 ├── lib/                      # Core backend utilities and services
 │   ├── llm/
 │   │   └── classifier.ts     # Groq SDK configuration & PR classifier logic
@@ -57,6 +72,7 @@ changelog-writer/
 │   └── migrations/           # Database schema migrations
 ├── scripts/
 │   └── test-classifier.ts    # CLI script for testing LLM/Groq classifier on fake PRs
+├── middleware.ts             # NextAuth routing protection middleware
 ├── docker-compose.yml        # Multi-container setup for local Postgres & Redis
 ├── package.json              # Project scripts and dependencies
 ├── tsconfig.json             # TypeScript compiler settings
@@ -65,7 +81,7 @@ changelog-writer/
 
 ---
 
-## Database Schema (`prisma/schema.prisma`)
+## 🗄️ Database Schema (`prisma/schema.prisma`)
 
 The database consists of the following relational models:
 
@@ -123,7 +139,7 @@ erDiagram
 
 ---
 
-## LLM Classification Flow (`lib/llm/classifier.ts`)
+## 🧠 LLM Classification Flow (`lib/llm/classifier.ts`)
 
 The AI engine takes pull request metadata and uses the `llama-3.3-70b-versatile` model to evaluate:
 1.  **PR Title & Description**
@@ -151,7 +167,16 @@ It parses this data into structured JSON matching this schema:
 
 ---
 
-## Environment Variables Config (`.env`)
+## 🔒 Session Protection & Middleware
+
+To safeguard developer workspaces, we enforce NextAuth Session protection across all workspace directories. 
+
+*   **Global Layout Integration**: [app/layout.tsx](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/app/layout.tsx) secures application context with a client-side wrapper ([app/SessionProvider.tsx](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/app/SessionProvider.tsx)).
+*   **Router Protection**: [middleware.ts](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/middleware.ts) actively blocks unauthorized entries, automatically routing unauthenticated traffic on `/dashboard/:path*` to `/login`.
+
+---
+
+## ⚙️ Environment Variables Config (`.env`)
 
 Create a `.env` file in the root directory and configure the following parameters:
 
@@ -163,7 +188,7 @@ GROQ_API_KEY="your-groq-api-key-here"
 
 ---
 
-## Local Setup & Development
+## 🚀 Local Setup & Development
 
 ### 1. Prerequisites
 Ensure you have the following installed locally:
@@ -183,7 +208,7 @@ docker-compose up -d
 ```
 
 ### 4. Setup Database & Prisma Client
-Apply migrations and generate the Prisma Client in `app/generated/prisma`:
+Apply migrations and generate the Prisma Client:
 ```bash
 pnpm prisma db push
 pnpm prisma generate
@@ -194,7 +219,7 @@ Start the Next.js local server:
 ```bash
 pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application landing page and playground.
 
 ### 6. Test the AI Classifier
 Run the built-in testing script to query the Groq LLM with a mock PR diff and view the structured JSON response:
@@ -204,62 +229,20 @@ npx tsx scripts/test-classifier.ts
 
 ### 7. Running the Background Worker & Queue
 
-Now that the local database and Redis services are active, you can start the BullMQ worker and queue a test job using simple, integrated scripts:
+Launch the BullMQ worker and queue simulation scripts to process background tasks:
 
-#### Method A: Using `pnpm` (Recommended)
 *   **Terminal 1 — Start the Worker:**
     ```bash
     pnpm worker
     ```
-    *You should see:* `[worker] Starting changelog worker...`
 
 *   **Terminal 2 — Add a Test Job:**
     ```bash
     pnpm test-queue
     ```
-    *You should see:* `Job added: pr-42`
-
-Once the job is queued, watch Terminal 1. The worker will pick it up, run AI classification, save the entry, and output:
-```text
-[worker] Processing job pr-42 — testuser/my-app PR#42
-[worker] Classified: "Dark mode toggle and sidebar contrast fix" (minor)
-[worker] Saved draft entry: clxxxxxxxxxxxxx
-[worker] ✓ Job pr-42 completed
-```
-
-#### Method B: Using standard `npm run` or `npx`
-*   **Terminal 1 — Start the Worker:**
-    ```bash
-    npm run worker
-    ```
-
-*   **Terminal 2 — Add a Test Job:**
-    ```bash
-    npm run test-queue
-    ```
 
 ---
 
-## Prisma v7 Database Adapter Architecture
+## ⚡ Prisma v7 Database Adapter Architecture
 
-This project is fully compatible with **Prisma v7**. Direct database connections in Prisma v7 require explicit **driver adapters**.
-
-We manage connections directly in Node using the standard `pg` pool wrapped in `@prisma/adapter-pg` inside [lib/prisma.ts](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/lib/prisma.ts):
-
-```typescript
-import "dotenv/config";
-import { PrismaClient } from "../app/generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-const adapter = new PrismaPg(pool);
-
-export const prisma = new PrismaClient({
-  log: ["query", "error"],
-  adapter,
-});
-```
+This project is fully compatible with **Prisma v7**. Direct database connections in Prisma v7 require explicit **driver adapters**. We manage connections directly in Node using the standard `pg` pool wrapped in `@prisma/adapter-pg` inside [lib/prisma.ts](file:///c:/Users/hv081/OneDrive/Desktop/Code/changelog-writer/lib/prisma.ts).
