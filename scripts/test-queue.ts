@@ -2,50 +2,60 @@ import { changelogQueue } from "../lib/queue";
 import { prisma } from "../lib/prisma";
 import type { ChangelogJobData } from "../lib/queue/processors/changelog.processor";
 
-const testJob: ChangelogJobData = {
-  type:           "pr",
-  installationId: "fake-install-123",
-  owner:          "testuser",
-  repo:           "my-app",
-  prNumber:       42,
-  commitSha:      "abc123",
-  prTitle:        "Add dark mode and fix sidebar contrast",
-  prDescription:  "Users can now toggle dark mode in settings. Also fixes poor contrast on the sidebar nav in light mode.",
-  diffText: `
-### src/settings/theme.ts (+38 -0)
-+ export type Theme = "light" | "dark" | "system"
-+
-+ export function setTheme(theme: Theme) {
-+   document.documentElement.setAttribute("data-theme", theme)
-+   localStorage.setItem("theme", theme)
-+ }
-+
-+ export function getTheme(): Theme {
-+   return (localStorage.getItem("theme") as Theme) ?? "system"
-+ }
-
-### src/components/Sidebar.tsx (+5 -3)
-- className="text-gray-400"
-+ className="text-gray-600 dark:text-gray-300"
-  `.trim(),
-};
-
 async function main() {
+  // Read arguments from command line or environment
+  const args = process.argv.slice(2);
+  
+  const installationId = args[0] || process.env.TEST_GITHUB_INSTALLATION_ID;
+  const owner = args[1] || process.env.TEST_GITHUB_OWNER;
+  const repo = args[2] || process.env.TEST_GITHUB_REPO;
+  const prNumber = Number(args[3] || process.env.TEST_GITHUB_PR_NUMBER);
+
+  if (!installationId || !owner || !repo || !prNumber || isNaN(prNumber)) {
+    console.error(`
+❌ Error: Missing required GitHub variables.
+Since the worker is now fully connected to the active GitHub App API, you must provide real parameters.
+
+Usage:
+  npx tsx scripts/test-queue.ts <installationId> <owner> <repo> <prNumber>
+
+Example:
+  npx tsx scripts/test-queue.ts 56789012 octocat Spoon-Knife 1
+
+Alternatively, set these environment variables in your .env:
+  TEST_GITHUB_INSTALLATION_ID="your-install-id"
+  TEST_GITHUB_OWNER="your-github-username"
+  TEST_GITHUB_REPO="your-github-repo"
+  TEST_GITHUB_PR_NUMBER="your-pr-number"
+    `);
+    process.exit(1);
+  }
+
+  const testJob: ChangelogJobData = {
+    installationId,
+    owner,
+    repo,
+    prNumber,
+    commitSha: "abc1234567890def",
+    prTitle: "Simulated Webhook Pull Request",
+    prDescription: "This pull request was queued by the developer testing script.",
+  };
+
   // Seed the required parent Installation record to satisfy foreign key constraints
   await prisma.installation.upsert({
     where: { id: testJob.installationId },
     create: {
       id: testJob.installationId,
-      githubInstallId: 12345, // Dummy githubInstallId
+      githubInstallId: Number(installationId),
       accountLogin: testJob.owner,
     },
     update: {},
   });
-  console.log(`Seeded parent Installation: ${testJob.installationId}`);
+  
+  console.log(`✓ Seeded parent Installation: ${testJob.installationId}`);
+  console.log(`Adding PR #${prNumber} from ${owner}/${repo} to the queue...`);
 
-  console.log("Adding job to queue...");
-
-  const jobId = `pr-${testJob.prNumber}`;
+  const jobId = `pr-${prNumber}`;
   const existingJob = await changelogQueue.getJob(jobId);
   if (existingJob) {
     await existingJob.remove();
@@ -56,9 +66,9 @@ async function main() {
     jobId, 
   });
 
-  console.log(`Job added: ${job.id}`);
-  console.log("Now start the worker to process it:");
-  console.log("  npx tsx worker.ts");
+  console.log(`🚀 Job added to BullMQ: ${job.id}`);
+  console.log("\nNow start the worker in a separate terminal to process it:");
+  console.log("  pnpm worker");
 
   process.exit(0);
 }
